@@ -2,6 +2,8 @@
 
 Make consistent, accessible item and group thumbnails for ArcGIS Online and ArcGIS Enterprise. It runs entirely in your browser: no sign-in, no server, and images you upload never leave your device.
 
+**Open the app: <https://joshalogs.github.io/thumbnail-builder-for-arcgis/>**
+
 > Independent open-source project. Not made or endorsed by Esri. ArcGIS is a trademark of Esri.
 
 ## Features
