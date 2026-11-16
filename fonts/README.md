@@ -5,4 +5,4 @@
 - Copyright 2020 The Open Sans Project Authors (<https://github.com/googlefonts/opensans>)
 - Licensed under the SIL Open Font License, Version 1.1 (<https://openfontlicense.org>)
 
-The font keeps its own license. This repository's 0BSD license does not cover it. The full license text belongs in `OFL.txt` beside the font file.
+The font keeps its own license. This repository's 0BSD license does not cover it. The full license text is in [`OFL.txt`](OFL.txt).
