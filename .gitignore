@@ -1,0 +1,9 @@
+# OS and editor files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Machine-local tooling
+.claude/launch.json
+.claude/settings.local.json
+node_modules/

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thumbnail Builder for ArcGIS</title>
+    <meta
+      name="description"
+      content="Make accessible, consistent item and group thumbnails for ArcGIS Online and ArcGIS Enterprise. Runs entirely in your browser."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+
+    <!-- Calcite components, loaded from Esri's CDN under Esri's license. Keep the version in sync with js/config.js. -->
+    <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/5.2.1/main.css" />
+    <script type="module" src="https://js.arcgis.com/calcite-components/5.2.1/index.js"></script>
+
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <script type="module" src="js/main.js"></script>
+  </head>
+  <body class="calcite-mode-auto">
+    <a class="skip-link" href="#preview">Skip to preview</a>
+    <a class="skip-link" href="#settings">Skip to settings</a>
+
+    <header>
+      <calcite-navigation label="Thumbnail Builder">
+        <calcite-navigation-logo
+          slot="logo"
+          heading="Thumbnail Builder"
+          description="for ArcGIS Online and Enterprise"
+          thumbnail="img/favicon.svg"
+          heading-level="1"
+        ></calcite-navigation-logo>
+        <calcite-action
+          slot="content-end"
+          id="mode-toggle"
+          icon="moon"
+          text="Dark mode"
+          label="Switch to dark mode"
+        ></calcite-action>
+        <calcite-action slot="content-end" id="help-open" icon="question" text="Help" label="Help and about"></calcite-action>
+      </calcite-navigation>
+    </header>
+
+    <main class="app">
+      <section class="stage" id="preview" aria-labelledby="preview-heading" tabindex="-1">
+        <h2 id="preview-heading" class="visually-hidden">Preview</h2>
+        <div class="canvas-box" id="canvas-box">
+          <canvas id="preview-canvas" width="600" height="400" role="img" aria-label="Thumbnail preview"></canvas>
+          <div class="drop-hint" aria-hidden="true">Drop an image to use it as the background</div>
+        </div>
+      </section>
+
+      <section class="output" aria-labelledby="output-heading">
+        <h2 id="output-heading" class="visually-hidden">Contrast and export</h2>
+        <div class="output-meta">
+          <calcite-chip id="contrast-chip" icon="information" scale="s" label="Text contrast">Measuring contrast</calcite-chip>
+          <span class="size-note" id="size-note">600 × 400 PNG</span>
+        </div>
+        <calcite-notice id="contrast-notice" kind="warning" icon="exclamation-mark-triangle" width="full" scale="s">
+          <div slot="title">Text contrast is low</div>
+          <div slot="message" id="contrast-message"></div>
+        </calcite-notice>
+        <div class="export-buttons">
+          <calcite-button id="download" icon-start="download">Download PNG</calcite-button>
+          <calcite-button id="copy-image" appearance="outline" icon-start="copy" hidden>Copy image</calcite-button>
+          <calcite-button id="share" appearance="outline" icon-start="share" hidden>Share</calcite-button>
+          <calcite-button id="copy-link" appearance="outline" icon-start="link">Copy link</calcite-button>
+        </div>
+        <p class="visually-hidden" id="live-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="controls" id="settings" aria-labelledby="settings-heading" tabindex="-1">
+        <h2 id="settings-heading" class="visually-hidden">Settings</h2>
+
+        <calcite-segmented-control id="kind" label-text="Thumbnail type" width="full">
+          <calcite-segmented-control-item value="item" icon-start="file" checked>Item (600 × 400)</calcite-segmented-control-item>
+          <calcite-segmented-control-item value="group" icon-start="group">Group (400 × 400)</calcite-segmented-control-item>
+        </calcite-segmented-control>
+
+        <calcite-block heading="Text" icon-start="text" heading-level="3" expandable expanded>
+          <div class="stack">
+            <calcite-input-text
+              id="title"
+              label-text="Title"
+              max-length="200"
+              placeholder="Name of the item or group"
+            ></calcite-input-text>
+            <div class="stack" id="category-fields">
+              <calcite-autocomplete
+                id="category"
+                label-text="Item type label"
+                placeholder="Web Map, Dashboard, or your own"
+              ></calcite-autocomplete>
+              <calcite-switch id="show-icon" label-text-end="Show the item type icon" checked></calcite-switch>
+            </div>
+          </div>
+        </calcite-block>
+
+        <calcite-block heading="Layout" icon-start="grid" heading-level="3" expandable expanded>
+          <calcite-tile-group
+            id="layout-tiles"
+            label="Layout"
+            selection-mode="single-persist"
+            layout="horizontal"
+            scale="s"
+          ></calcite-tile-group>
+        </calcite-block>
+
+        <calcite-block heading="Theme" icon-start="palette" heading-level="3" expandable expanded>
+          <div class="stack">
+            <calcite-tile-group
+              id="theme-tiles"
+              label="Theme"
+              selection-mode="single-persist"
+              layout="horizontal"
+              scale="s"
+            ></calcite-tile-group>
+            <form class="inline-form" id="pack-form">
+              <calcite-input-text
+                id="pack-url"
+                label-text="Load a theme pack (optional)"
+                placeholder="https://example.org/themes.json"
+              ></calcite-input-text>
+              <calcite-button id="pack-load" type="submit" appearance="outline" icon-start="download">Load</calcite-button>
+            </form>
+          </div>
+        </calcite-block>
+
+        <calcite-block heading="Images" icon-start="image" heading-level="3" expandable expanded>
+          <div class="stack">
+            <fieldset class="field-group">
+              <legend>Background image</legend>
+              <div class="button-row">
+                <calcite-button id="background-upload" appearance="outline" icon-start="upload">Upload</calcite-button>
+                <calcite-button id="background-clear" appearance="transparent" kind="neutral" icon-start="trash">Remove</calcite-button>
+              </div>
+              <calcite-input-text id="background-url" label-text="Or an image URL" placeholder="https://"></calcite-input-text>
+              <calcite-slider id="focus-x" label-text="Crop focus, left to right" min="0" max="100" step="1" value="50" label-handles></calcite-slider>
+              <calcite-slider id="focus-y" label-text="Crop focus, top to bottom" min="0" max="100" step="1" value="50" label-handles></calcite-slider>
+              <calcite-slider id="scrim" label-text="Shade over the image" min="0" max="80" step="5" value="45" label-handles></calcite-slider>
+            </fieldset>
+            <fieldset class="field-group">
+              <legend>Logo</legend>
+              <div class="button-row">
+                <calcite-button id="logo-upload" appearance="outline" icon-start="upload">Upload</calcite-button>
+                <calcite-button id="logo-clear" appearance="transparent" kind="neutral" icon-start="trash">Remove</calcite-button>
+              </div>
+              <calcite-input-text id="logo-url" label-text="Or an image URL" placeholder="https://"></calcite-input-text>
+              <calcite-slider id="logo-scale" label-text="Logo size (%)" min="50" max="200" step="5" value="100" label-handles></calcite-slider>
+            </fieldset>
+            <p class="hint">Tip: drop an image on the preview, or paste one with Ctrl+V, to use it as the background.</p>
+          </div>
+        </calcite-block>
+
+        <calcite-block heading="Color" icon-start="contrast" heading-level="3" expandable expanded>
+          <div class="stack">
+            <calcite-label>
+              Band and panel color
+              <calcite-color-picker
+                id="accent"
+                alpha-channel
+                format="hexa"
+                scale="s"
+                storage-id="thumbnail-builder-accent"
+              ></calcite-color-picker>
+            </calcite-label>
+            <calcite-button id="accent-reset" appearance="transparent" kind="neutral" icon-start="reset">Use the theme's color</calcite-button>
+            <calcite-segmented-control id="text-mode" label-text="Text color" width="full">
+              <calcite-segmented-control-item value="auto" checked>Auto</calcite-segmented-control-item>
+              <calcite-segmented-control-item value="light">Light</calcite-segmented-control-item>
+              <calcite-segmented-control-item value="dark">Dark</calcite-segmented-control-item>
+            </calcite-segmented-control>
+            <p class="hint">Auto measures the pixels behind the text and picks light or dark, whichever has more contrast.</p>
+          </div>
+        </calcite-block>
+
+        <calcite-button id="reset" appearance="transparent" kind="neutral" icon-start="reset" width="full">Reset all settings</calcite-button>
+      </section>
+    </main>
+
+    <calcite-dialog id="help" heading="Help and about" heading-level="2" modal width="m">
+      <div class="stack">
+        <section>
+          <h3>Make a thumbnail</h3>
+          <ol>
+            <li>Type the title, then pick a layout and a theme.</li>
+            <li>Add a background photo or a logo if you have one. Without a photo, the theme draws a contour pattern.</li>
+            <li>Download the PNG. On the item or group page in ArcGIS, choose <strong>Edit thumbnail</strong> and upload it.</li>
+          </ol>
+        </section>
+        <section>
+          <h3>Accessibility</h3>
+          <p>
+            The contrast check measures the text against the actual pixels behind it, using the WCAG 2.1 contrast formula.
+            Thumbnails are usually shown small, so aim for at least 4.5:1.
+          </p>
+        </section>
+        <section>
+          <h3>Privacy</h3>
+          <p>
+            Everything runs in your browser. Images you upload stay on your device. Image URLs and theme packs are fetched
+            directly from the sites that host them. Share links carry only your settings.
+          </p>
+        </section>
+        <section>
+          <h3>About</h3>
+          <p>
+            Version <span id="app-version"></span>. Free and open source under the 0BSD license.
+            Built with Esri's Calcite Design System, which is loaded from Esri's CDN under Esri's own license terms.
+            This is an independent project, not made or endorsed by Esri. ArcGIS is a trademark of Esri.
+          </p>
+        </section>
+      </div>
+      <calcite-button slot="footer-end" id="help-close">Close</calcite-button>
+    </calcite-dialog>
+
+    <input type="file" id="file-input" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml" hidden />
+  </body>
+</html>

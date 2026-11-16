@@ -1,0 +1,55 @@
+{
+  "name": "Built-in themes",
+  "themes": [
+    {
+      "id": "calcite",
+      "name": "Calcite",
+      "description": "Esri brand blue",
+      "canvas": "#0a2b45",
+      "accent": "#007ac2eb",
+      "chip": "#0a1f30b8",
+      "patternColor": "#ffffff26",
+      "pattern": "contours"
+    },
+    {
+      "id": "slate",
+      "name": "Slate",
+      "description": "Neutral charcoal",
+      "canvas": "#20262e",
+      "accent": "#353f4bf0",
+      "chip": "#11161cbf",
+      "patternColor": "#ffffff1f",
+      "pattern": "contours"
+    },
+    {
+      "id": "forest",
+      "name": "Forest",
+      "description": "Deep green",
+      "canvas": "#123221",
+      "accent": "#2c6b48f0",
+      "chip": "#0a2015bf",
+      "patternColor": "#c8f0d626",
+      "pattern": "contours"
+    },
+    {
+      "id": "ember",
+      "name": "Ember",
+      "description": "Burnt orange",
+      "canvas": "#3a1a0c",
+      "accent": "#b4440ff0",
+      "chip": "#2a1006bf",
+      "patternColor": "#ffd9c226",
+      "pattern": "contours"
+    },
+    {
+      "id": "paper",
+      "name": "Paper",
+      "description": "Light, for dark logos",
+      "canvas": "#e9eef3",
+      "accent": "#fffffff2",
+      "chip": "#ffffffd9",
+      "patternColor": "#0b1f3324",
+      "pattern": "contours"
+    }
+  ]
+}

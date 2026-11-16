@@ -1,0 +1,15 @@
+{
+  "name": "thumbnail-builder-for-arcgis",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Build accessible item and group thumbnails for ArcGIS Online and ArcGIS Enterprise, entirely in the browser.",
+  "license": "0BSD",
+  "type": "module",
+  "scripts": {
+    "serve": "node tools/serve.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

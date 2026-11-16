@@ -1,0 +1,292 @@
+/*
+ * Page layout on top of Calcite. Colors use Calcite tokens, so light and dark
+ * modes follow the Calcite mode class on <body>.
+ *
+ * Small screens: one column, with the preview stuck to the top while the
+ * settings scroll underneath it. Wide screens: preview and export on the left,
+ * settings in their own scrolling column on the right.
+ */
+
+:root {
+  color-scheme: light dark;
+}
+
+body.calcite-mode-light {
+  color-scheme: light;
+}
+
+body.calcite-mode-dark {
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--calcite-font-family);
+  background: var(--calcite-color-background);
+  color: var(--calcite-color-text-1);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -100px;
+  z-index: 100;
+  padding: 8px 12px;
+  border: 2px solid var(--calcite-color-brand);
+  border-radius: 4px;
+  background: var(--calcite-color-foreground-1);
+  color: var(--calcite-color-text-1);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  padding: 0 16px 24px;
+}
+
+/* ---- Preview ---- */
+
+.stage {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin-inline: -16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--calcite-color-border-3);
+  background: var(--calcite-color-background);
+}
+
+.stage:focus {
+  outline: none;
+}
+
+.canvas-box {
+  position: relative;
+  aspect-ratio: var(--ratio, 1.5);
+  width: min(100%, calc(36vh * var(--ratio, 1.5)));
+  margin-inline: auto;
+  border-radius: 6px;
+  background: var(--calcite-color-foreground-2);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.25),
+    0 8px 24px rgb(0 0 0 / 0.14);
+}
+
+#preview-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+}
+
+.drop-hint {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  padding: 16px;
+  border: 3px dashed var(--calcite-color-brand);
+  border-radius: 6px;
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+}
+
+.canvas-box.drag-over .drop-hint {
+  display: grid;
+}
+
+/* ---- Contrast and export ---- */
+
+.output {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.output-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.size-note,
+.hint {
+  margin: 0;
+  color: var(--calcite-color-text-3);
+  font-size: var(--calcite-font-size--1);
+}
+
+.export-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.export-buttons calcite-button {
+  flex: 1 1 auto;
+}
+
+/* ---- Settings ---- */
+
+/* minmax(0, 1fr) stops wide content (the tile grids) from stretching the column. */
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-content: start;
+}
+
+.controls:focus {
+  outline: none;
+}
+
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inline-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+}
+
+.field-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--calcite-color-border-3);
+  border-radius: 4px;
+}
+
+.field-group legend {
+  padding: 0 4px;
+  color: var(--calcite-color-text-1);
+  font-size: var(--calcite-font-size--1);
+  font-weight: 600;
+}
+
+/*
+ * Calcite tile groups lay tiles out in a single row, so a long row scrolls
+ * sideways inside its own box instead of widening the settings column.
+ */
+calcite-tile-group {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding-block-end: 4px;
+}
+
+calcite-tile-group calcite-tile {
+  scroll-snap-align: start;
+}
+
+.tile-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---- Wide screens ---- */
+
+@media (min-width: 900px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  header {
+    flex: none;
+  }
+
+  .app {
+    flex: 1;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "stage controls"
+      "output controls";
+    gap: 16px 24px;
+    padding: 20px;
+  }
+
+  .stage {
+    grid-area: stage;
+    position: static;
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    container-type: size;
+  }
+
+  .canvas-box {
+    width: min(100cqw, 100cqh * var(--ratio, 1.5));
+  }
+
+  .output {
+    grid-area: output;
+    justify-self: center;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .controls {
+    grid-area: controls;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 2px 6px 24px 2px;
+  }
+}
